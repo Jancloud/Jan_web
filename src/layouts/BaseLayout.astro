@@ -1,0 +1,33 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import MobileDock from '../components/layout/MobileDock.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = '极简个人品牌网站' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="bg-background text-text">
+    <SiteHeader />
+    <main class="mx-auto w-full max-w-6xl px-6 pb-28 pt-10 md:px-10 md:pb-20">
+      <slot />
+    </main>
+    <MobileDock />
+    <SiteFooter />
+  </body>
+</html>

@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BentoGrid from '../components/layout/BentoGrid.astro';
+import ProjectCard from '../components/widgets/ProjectCard.astro';
+import MotionReveal from '../components/ui/MotionReveal';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import { getProjectCover } from '../utils/project-covers';
+
+const projects = (await getCollection('projects'))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .map((project) => ({
+    slug: project.id,
+    title: project.data.title,
+    tagline: project.data.tagline,
+    tags: project.data.tags,
+    featured: project.data.isFeatured,
+    cover: getProjectCover(project.data.coverImage)
+  }));
+---
+
+<BaseLayout title="项目 | Vibe & Pace" description="Vibe Coding 项目日志">
+  <MotionReveal client:visible delay={0.05}>
+    <section>
+      <SectionHeading title="项目日志" description="用最小交互记录自动化构建和长期训练节奏。" />
+
+      <BentoGrid className="mt-10">
+        {projects.map((project, index) => (
+          <ProjectCard
+            project={{
+              slug: project.slug,
+              title: project.title,
+              tagline: project.tagline,
+              tags: project.tags,
+              cover: project.cover
+            }}
+            featured={index === 0}
+          />
+        ))}
+      </BentoGrid>
+    </section>
+  </MotionReveal>
+</BaseLayout>

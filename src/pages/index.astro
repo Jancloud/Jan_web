@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BentoGrid from '../components/layout/BentoGrid.astro';
+import MarathonStats from '../components/widgets/MarathonStats.astro';
+import ProjectCard from '../components/widgets/ProjectCard.astro';
+import MotionReveal from '../components/ui/MotionReveal';
+import HoverButton from '../components/ui/HoverButton';
+import SectionHeading from '../components/ui/SectionHeading.astro';
+import { profileData } from '../utils/profile';
+import { getProjectCover } from '../utils/project-covers';
+import janAvatar from '../assets/jan.jpg';
+
+const projects = await getCollection('projects');
+const featuredProjects = projects
+  .filter((project) => project.data.isFeatured)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .map((project) => ({
+    slug: project.id,
+    title: project.data.title,
+    tagline: project.data.tagline,
+    tags: project.data.tags,
+    cover: getProjectCover(project.data.coverImage)
+  }));
+---
+
+<BaseLayout title="Vibe & Pace" description={profileData.intro}>
+  <MotionReveal client:visible delay={0.04}>
+    <section data-testid="home-hero-section" class="grid grid-cols-1 items-center gap-10 md:grid-cols-12">
+      <div class="md:col-span-9">
+        <p class="text-xs uppercase tracking-[0.22em] text-muted">Vibe Coding x Marathon</p>
+        <h1 class="mt-4 text-4xl font-bold leading-tight md:text-5xl">{profileData.heroTitle}</h1>
+        <p class="mt-6 text-base leading-relaxedReading text-muted">{profileData.intro}</p>
+        <div class="mt-8 flex gap-4 text-sm">
+          <HoverButton client:visible href={profileData.socials.github}>GitHub</HoverButton>
+          <HoverButton client:visible href={profileData.socials.email}>Email</HoverButton>
+        </div>
+      </div>
+      <div class="md:col-span-3 md:justify-self-end">
+        <div class="mx-auto w-full max-w-[220px] rounded-2xl bg-background p-2 ring-1 ring-black/[0.04] md:mx-0">
+          <Image src={janAvatar} alt="Jan avatar" class="block w-full rounded-xl object-cover" />
+        </div>
+      </div>
+    </section>
+  </MotionReveal>
+
+  <MotionReveal client:visible delay={0.08}>
+    <section data-testid="home-about-section" class="mt-20">
+      <SectionHeading
+        title="关于我"
+        description="我把 AI 协作看成即兴创作工具，把长跑看成长期主义训练。一个追求灵感速度，一个追求稳定节奏，最后都会汇聚到同一种专注。"
+      />
+      <div class="mt-8">
+        <MarathonStats />
+      </div>
+    </section>
+  </MotionReveal>
+
+  <MotionReveal client:visible delay={0.12}>
+    <section data-testid="home-bento-section" class="mt-20">
+      <div class="flex items-end justify-between gap-4">
+        <h2 class="text-2xl font-semibold">项目日志</h2>
+        <a href="/projects" class="text-sm text-muted transition-colors hover:text-accent">查看全部</a>
+      </div>
+
+      <BentoGrid className="mt-8">
+        {featuredProjects.map((project, index) => (
+          <ProjectCard
+            project={{
+              slug: project.slug,
+              title: project.title,
+              tagline: project.tagline,
+              tags: project.tags,
+              cover: project.cover
+            }}
+            featured={index === 0}
+          />
+        ))}
+      </BentoGrid>
+    </section>
+  </MotionReveal>
+</BaseLayout>

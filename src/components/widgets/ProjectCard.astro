@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface ProjectPreview {
+  slug: string;
+  title: string;
+  tagline: string;
+  tags: string[];
+  cover?: ImageMetadata;
+}
+
+interface Props {
+  project: ProjectPreview;
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+---
+
+<a
+  data-testid="project-card-link"
+  href={`/${project.slug}/`}
+  class:list={[
+    'group block rounded-2xl bg-white p-6 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.006] hover:shadow-[0_10px_24px_rgba(26,26,26,0.06)]',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+    featured ? 'md:col-span-2 md:min-h-[220px]' : 'md:min-h-[180px]'
+  ]}
+>
+  <div class:list={['mb-5 overflow-hidden rounded-xl bg-background', featured ? 'aspect-[16/8]' : 'aspect-[16/10]']}>
+    {
+      project.cover ? (
+        <Image src={project.cover} alt={`${project.title} preview`} class="h-full w-full object-cover" />
+      ) : (
+        <div class="h-full w-full" />
+      )
+    }
+  </div>
+
+  <h3 class="text-xl font-semibold text-text">{project.title}</h3>
+  <p class="mt-3 text-sm leading-relaxed text-muted">{project.tagline}</p>
+  <div class="mt-5 flex flex-wrap gap-2">
+    {
+      project.tags.map((tag) => (
+        <span class="rounded-full bg-background px-3 py-1 text-xs text-muted">{tag}</span>
+      ))
+    }
+  </div>
+</a>

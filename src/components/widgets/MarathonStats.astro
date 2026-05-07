@@ -1,0 +1,31 @@
+---
+import { profileData } from '../../utils/profile';
+---
+
+<section class="relative overflow-hidden rounded-2xl bg-surface p-6 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(26,26,26,0.06)]">
+  <h3 class="text-base font-semibold">Runner's Logic</h3>
+  <div class="relative z-10 mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div>
+      <p class="text-xs uppercase tracking-wide text-muted">全马</p>
+      <p class="mt-2 flex items-end gap-2 text-4xl font-black leading-none tracking-tight md:text-[2.6rem]">
+        {profileData.stats.marathonPB}
+        <span class="pb-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted">PB</span>
+      </p>
+    </div>
+    <div>
+      <p class="text-xs uppercase tracking-wide text-muted">半马</p>
+      <p class="mt-2 flex items-end gap-2 text-4xl font-black leading-none tracking-tight md:text-[2.6rem]">
+        {profileData.stats.halfMarathonPB}
+        <span class="pb-1 text-[11px] font-medium uppercase tracking-[0.16em] text-muted">PB</span>
+      </p>
+    </div>
+  </div>
+
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-40">
+    <div class="absolute -bottom-16 left-8 h-32 w-64 rounded-[999px] border border-accent/20"></div>
+    <div class="absolute -bottom-10 left-16 h-24 w-48 rounded-[999px] border border-accent/15"></div>
+    <div class="absolute bottom-8 right-10 h-2 w-14 rounded-full bg-accent/20"></div>
+    <div class="absolute bottom-14 right-10 h-2 w-20 rounded-full bg-accent/16"></div>
+    <div class="absolute bottom-20 right-10 h-2 w-10 rounded-full bg-accent/12"></div>
+  </div>
+</section>

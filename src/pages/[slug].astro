@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MotionReveal from '../components/ui/MotionReveal';
+import { getProjectCover } from '../utils/project-covers';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props as { project: CollectionEntry<'projects'> };
+const { Content } = await render(project);
+
+const coverImage = getProjectCover(project.data.coverImage);
+---
+
+<BaseLayout title={`${project.data.title} | Vibe & Pace`} description={project.data.description}>
+  <MotionReveal client:visible delay={0.05}>
+    <article class="mx-auto max-w-3xl">
+      <p class="text-xs uppercase tracking-[0.2em] text-muted">Project Detail</p>
+      <h1 class="mt-4 text-4xl font-bold">{project.data.title}</h1>
+      <p class="mt-5 text-base leading-relaxedReading text-muted">{project.data.description}</p>
+
+      {coverImage && (
+        <div class="mt-10 rounded-3xl bg-surface p-4">
+          <Image src={coverImage} alt={`${project.data.title} cover`} class="w-full rounded-2xl" />
+        </div>
+      )}
+
+      <div class="mt-8 flex flex-wrap gap-2">
+        {project.data.tags.map((tag) => (
+          <span class="rounded-full bg-surface px-3 py-1 text-xs text-muted">{tag}</span>
+        ))}
+      </div>
+
+      <div class="project-rich-text mt-10 max-w-none leading-relaxed">
+        <Content />
+      </div>
+    </article>
+  </MotionReveal>
+</BaseLayout>
